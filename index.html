@@ -1,0 +1,2568 @@
+<html>
+	<head>
+		<title>Quick Bible</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<meta property="og:image" content="https://quickbible.app/apple-touchIcon.png" />
+		<meta property="og:image:width" content="1024" />
+		<meta property="og:image:height" content="1024" />
+		<meta property="og:title" content="Quick Bible" />
+		<meta property="og:description" content="Navigate much more quickly to a passage of the Bible based on a known Scripture Reference (in comparison to apps that have a multi-step navigation process)!" />
+		<link rel="apple-touchIcon" href="apple-touchIcon.png"/>
+		<script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+		<link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+		<link href="https://fonts.googleapis.com/css?family=Iceland|Lora|Oswald|Playfair+Display|Poppins|Raleway|Roboto|Satisfy|Source+Code+Pro|Ubuntu&display=swap" rel="stylesheet">
+		<style>
+			body {
+				font-family: helvetica, 'sans-serif';
+				font-size: 14px;
+				font-weight: bold !important;
+				margin: 0;
+				padding: 0;
+				overscroll-behavior: none;
+				-webkit-overflow-scrolling: touch;
+			}
+			body.Iceland, body.Iceland input, body.Iceland button {
+				font-family: 'Iceland', helvetica, arial, 'sans-serif' !important;
+			}
+			body.Lora-Regular, body.Lora-Regular input, body.Lora-Regular button {
+				font-family: 'Lora', times, 'times new roman', serif !important;
+			}
+			body.Oswald-Regular, body.Oswald-Regular input, body.Oswald-Regular button {
+				font-family: 'Oswald', helvetica, arial, 'sans-serif' !important;
+			}
+			body.PlayfairDisplay-Regular, body.PlayfairDisplay-Regular input, body.PlayfairDisplay-Regular button {
+				font-family: 'Playfair Display', times, 'times new roman', serif !important;
+			}
+			body.Poppins-Regular, body.Poppins-Regular input, body.Poppins-Regular button {
+				font-family: 'Poppins', helvetica, arial, 'sans-serif' !important;
+			}
+			body.Raleway-Regular, body.Raleway-Regular input, body.Raleway-Regular button {
+				font-family: 'Raleway', helvetica, arial, 'sans-serif' !important;
+			}
+			body.Roboto-Regular, body.Roboto-Regular input, body.Roboto-Regular button {
+				font-family: 'Roboto', helvetica, arial, 'sans-serif' !important;
+			}
+			body.Satisfy-Regular, body.Satisfy-Regular input, body.Satisfy-Regular button {
+				font-family: 'Satisfy', helvetica, arial, cursive !important;
+			}
+			body.SourceCodePro-Regular, body.SourceCodePro-Regular input, body.SourceCodePro-Regular button {
+				font-family: 'Source Code Pro', 'courier new', courier, monospace !important;
+			}
+			body.Ubuntu-Regular, body.Ubuntu-Regular input, body.Ubuntu-Regular button {
+				font-family: 'Ubuntu', helvetica, arial, 'sans-serif' !important;
+			}
+			body.eighteen, body.eighteen input, body.eighteen button {
+				font-size: 10px !important;
+			}
+			body.twenty, body.twenty input, body.twenty button {
+				font-size: 11px !important;
+			}
+			body.twentyTwo, body.twentyTwo input, body.twentyTwo button {
+				font-size: 12px !important;
+			}
+			body.twentyFour, body.twentyFour input, body.twentyFour button {
+				font-size: 13px !important;
+			}
+			body.twentySix, body.twentySix input, body.twentySix button {
+				font-size: 14px !important;
+			}
+			body.twentyEight, body.twentyEight input, body.twentyEight button {
+				font-size: 15px !important;
+			}
+			body.thirty, body.thirty input, body.thirty button {
+				font-size: 16px !important;
+			}
+			body.thirtyTwo, body.thirtyTwo input, body.thirtyTwo button {
+				font-size: 17px !important;
+			}
+			body.day {
+				background: white;
+				color: black;
+			}
+			body.night {
+				background: black;
+				color: white;
+			}
+			body.day input {
+				border: solid thin black;
+				background: white;
+				color: black;
+			}
+			body.day button {
+				border: solid thin white;
+				background: black;
+				color: white;
+			}
+			body.night input {
+				border: solid thin white;
+				background: black;
+				color: white;
+			}
+			body.night button {
+				border: solid thin black;
+				background: white;
+				color: black;
+			}
+			input, button {
+				margin: 0;
+				padding: 1.25em !important;
+				border-radius: 2.5em;
+				text-align: center;
+				font-weight: bold !important;
+				width: 100% !important;
+			}
+			button {
+				text-transform: uppercase;
+				flex-wrap: flex;
+				cursor: pointer;
+			}
+			button.gray {
+				background: gray !important;
+			}
+			h1, h2, h3 {
+				text-align: center !important;
+				line-height: 1em;
+			}
+			h3 {
+				margin: 1em;
+				padding: 1em;
+				border-radius: 3em;
+				border: solid gray .9px;
+			}
+			h3 img {
+				height: 1em;
+				width: 1em;
+			}
+			.container {
+				margin: auto;
+				width: 100%;
+				max-width: 600px;
+			}
+			.full, .half, .third, .spacer {
+				float: left;
+				padding: 0;
+				margin: 0;
+			}
+			.full {
+				width: 100%;
+			}
+			.half {
+				width: 47.5%;
+			}
+			.third {
+				width: 30%;
+			}
+			.spacer {
+				width: 5%;
+				height: 1em;
+			}
+			.clearfix {
+				clear: both;
+			}
+			.padding {
+				padding: 1em;
+			}
+			.show {
+				display: block;
+			}
+			.hide {
+				display: none;
+			}
+			.background {
+				display: table;
+				position: absolute;
+				top: 0;
+				left: 0;
+				height: 100%;
+				width: 100%;
+				max-width: 100%;
+			}
+			.middle {
+				display: table-cell;
+				vertical-align: middle;
+				max-width: 100%;
+			}
+			.inner {
+				margin-left: auto;
+				margin-right: auto;
+				max-width: 100%;
+			}
+			.verse {
+				font-weight: lighter;
+			}
+			.verse, .list {
+				margin: .5em;
+				padding: .5em;
+				font-size: 1.5em;
+				border-radius: 1em;
+				z-index: 1;
+			}
+			.list {
+				text-align: center;
+				cursor: pointer;
+			}
+			.lastVerse {
+				margin-bottom: 84px;
+			}
+			#currentVerse .verse {
+				border: solid gray .9px;
+			}
+			.day .selected.verse {
+				background: #DADADA;
+			}
+			.night .selected.verse {
+				background: #262626;
+			}
+			.day .highlighted.verse {
+				background: #BFD0FF;
+			}
+			.night .highlighted.verse {
+				background: #001040;
+			}
+			.day .highlighted.selected.verse {
+				background: #A0A7BF;
+			}
+			.night .highlighted.selected.verse {
+				background: #40475F;
+			}
+			.highlighted {
+				position: relative;
+			}
+			.flex {
+				display: flex;
+			}
+			.erase {
+				float: right;
+				color: rgba(255,0,0,.75);
+				cursor: pointer;
+			}
+			.userSelectNone {
+				-webkit-touch-callout: none;
+				-webkit-user-select: none;
+				-khtml-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+				overflow: hidden;
+			}
+			#topLabel, #bottomLabel {
+				z-index: 3;
+				position: fixed;
+				right: 0;
+				left: 0;
+				-webkit-touch-callout: none;
+				-webkit-user-select: none;
+				-khtml-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+				overflow: hidden;
+			}
+			#topLabel {
+				top: 0;
+			}
+			#bottomLabel {
+				bottom: 0;
+				cursor: ew-resize;
+			}
+			#nightMode img, #random img {
+				cursor: pointer !important;
+			}
+			#leftButton img, #nightMode img, #rightButton img, #random img {
+				padding: 1em;
+				margin: -1em;
+			}
+			.night #nightMode img {
+				content:url("moon.svg");
+			}
+			.day #nightMode img {
+				content:url("sun.svg");
+			}
+			.day #topLabel, .day #bottomLabel {
+				background: white;
+			}
+			.night #topLabel, .night #bottomLabel {
+				background: black;
+			}
+			#leftButton, #nightMode {
+				float: left;
+			}
+			#rightButton, #random {
+				float: right;
+			}
+			#menuCopy {
+				cursor: copy;
+			}
+			#menuViewSettings {
+				cursor: context-menu;
+			}
+			#menuVersions, #menuPlayAudio {
+				cursor: ne-resize;
+			}
+			#displayBackground, #menuBackground {
+				cursor: grabbing;
+			}
+			#displayBackground, #settingsBackground {
+				-webkit-touch-callout: none;
+				-webkit-user-select: none;
+				-khtml-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+				overflow: hidden;
+				display: none;
+				position: fixed;
+				right: 0;
+				left: 0;
+				top: 0;
+				bottom: 0;
+			}
+			.halfAlpha {
+				opacity: 0.5;
+			}
+			.quarterAlpha {
+				opacity: 0.25;
+			}
+			.flexContainer {
+				display: flex;
+				align-items: stretch;
+			}
+			.flexGrow {
+				flex-grow: 1
+			}
+			#previous, #next {
+				display: flex;
+				align-items: stretch;
+				flex-grow: 7;
+				min-width: 20px;
+			}
+			#menuBackground {
+				z-index: 4;
+				position: fixed;
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				padding: 0;
+				-webkit-touch-callout: none;
+				-webkit-user-select: none;
+				-khtml-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+				overflow: hidden;
+			}
+			#menuBackground div {
+				text-align: center;
+				width: 33.333%;
+				height: 33.333%;
+				margin: 0;
+				padding: 0;
+				float: left;
+			}
+			#menuBackground div div {
+				height: 100%;
+				width: 100%;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+			}
+			#menuBackground div div.hover, #menuBackground div.hover {
+				background: rgba(127,127,127,.25);
+			}
+			#menuBackground img {
+				user-drag: none; 
+				user-select: none;
+				-moz-user-select: none;
+				-webkit-user-drag: none;
+				-webkit-user-select: none;
+				-ms-user-select: none;
+			}
+			.menuIcon {
+				height: 2em;
+				z-index: 5;
+			}
+			#fullscreenBackground {
+				z-index: 6;
+			}
+			.fullscreenTitleContainer {
+				position: fixed;
+				top: 0;
+				left: 0;
+				right: 0;
+				width: 100%;
+			}
+			.fullscreenTextTopPadding {
+				height: 1em;
+				padding-top: 1em;
+				padding-bottom: 1em;
+			}
+			.day #fullscreenBackground, .day .fullscreenTitleContainer {
+				background: white !important;
+			}
+			.night #fullscreenBackground, .night .fullscreenTitleContainer {
+				background: black !important;
+			}
+			#back {
+				z-index: 200;
+				position: fixed;
+				float: left;
+				margin: .5em;
+				padding: .5em;
+			}
+			#back img {
+				z-index: 200;
+				height: 1.5em;
+				cursor: pointer;
+			}
+			#bridge a {
+				position: fixed;
+				z-index: 100;
+				background: white;
+				color: black;
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				padding: 0;
+				text-align: center; 
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+		</style>
+	</head>
+	<body id="body" class="day Poppins-Regular twentyFour">
+		<div id="mainBackground" class="background">
+			<div class="middle">
+				<div class="inner flexContainer">
+					<div id="previous"></div>
+					<div class="container flexGrow">
+						<div class="padding">
+							<div id="profile">
+								<h1>Quick Bible</h1>
+								<h2>Profile</h2>	
+								<div class="full">
+									<input name="username" id="profileUsername" type="username" placeholder="Username">
+								</div>
+								<div class="clearfix"></div>
+								<br>
+								<div class="full">
+									<input name="email" id="profileEmail" type="email" placeholder="Email">
+								</div>
+								<div class="clearfix"></div>
+								<br>
+								<div class="full">
+									<input name="password" id="profilePassword" type="password" placeholder="Password">
+								</div>
+								<div class="clearfix"></div>
+								<br>
+								<div class="third">
+									<button id="profileSignUp">sign up</button>
+								</div>
+								<div class="spacer"></div>
+								<div class="third">
+									<button id="profileSignIn">sign in</button> 
+								</div>
+								<div class="spacer"></div>
+								<div class="third">
+									<button id="profileSignOut">sign out</button>
+								</div>
+								<div class="clearfix"></div>
+								<br>
+								<div class="half">
+									<button id="profileUpdate">update</button>
+								</div>
+								<div class="spacer"></div>
+								<div class="half">
+									<button id="profileNightMode">day</button>
+								</div>
+								<div class="clearfix"></div>
+								<br>
+								<div class="full">
+									<button id="profileResetPassword" class="full">Reset Password</button>
+								</div>
+								<div class="clearfix"></div>
+								<br>
+								<div class="full">
+									<button id="profileGoToBible" class="full">Bible</button>
+								</div>
+								<br><br><br>
+								<p align="center">
+									<a href="https://quickbible.app/instructions">Instructions</a>
+									<a href="https://quickbible.app/Privacy">Privacy</a>
+									<br>
+									<a target='_blank' href="https://play.google.com/store/apps/details?id=com.quickbible.quickbible">Download Android App</a>
+									<a target='_blank' href="https://apps.apple.com/us/app/quick-bible/id1076449737">Download iOS App</a>
+									<a href="https://quickbible.app/QuickBible.app.zip">Download Mac App</a>
+								</p>
+								<br>
+							</div>
+							<div id="bible" class="hide">
+								<div class="full" id="bibleText">
+									<div id="topLabel">
+										<h3 class="topLabel"><span id="nightMode"><img></span><span id="topLabelBook">Genesis</span> <span id="topLabelChapter">1</span><span id="topLabelColon">:</span><span id="topLabelVerse">1</span> <span id="topLabelType"></span><span id="random"><img src="random.svg"></span></h3>
+									</div>
+									<p id="content"></p>
+									<div id="bottomLabel">
+										<h3 class="bottomLabel"><span id="leftButton"><img src="left.svg"></span><span id="bottomLabelMode">Verse</span> <span id="bottomLabelNumerator">1</span>/<span id="bottomLabelDenominator">31</span><span id="rightButton"><img src="right.svg"></span></h3>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="next"></div>
+				</div>
+			</div>
+		</div>
+		<div id="displayBackground" class="background">
+			<div class="middle">
+				<div class="inner">
+					<div class="container">
+						<div class="padding">
+							<h1>Quick Bible</h1>
+							<div>
+								<h2><span id="display"></span></h2>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="settingsBackground" class="background">
+			<div class="middle">
+				<div class="inner">
+					<div class="container">
+						<div class="padding">
+							<h1>Quick Bible</h1>
+							<div>
+								<div class="full">
+									<div id="settings" class="hide">
+										<h2>Settings</h2>
+										<button id="settingFullscreen" class="full">Fullscreen</button>
+										<button id="settingFontFamily" class="full">Font Family</button>
+										<button id="settingFontSize" class="full">Font Size</button>
+										<button id="settingClearHistory" class="full">Clear History</button>
+										<button id="settingClearHighlights" class="full">Clear Highlights</button>
+									</div>
+									<div id="settingsFontFamily" class="hide">
+										<h2>Font Family</h2>
+										<button onclick="setFontFamilyTo('Iceland')" class="full">Iceland</button>
+										<button onclick="setFontFamilyTo('Lora-Regular')" class="full">Lora</button>
+										<button onclick="setFontFamilyTo('Oswald-Regular')" class="full">Oswald</button>
+										<button onclick="setFontFamilyTo('PlayfairDisplay-Regular')" class="full">Playfair</button>
+										<button onclick="setFontFamilyTo('Poppins-Regular')" class="full">Poppins</button>
+										<button onclick="setFontFamilyTo('Raleway-Regular')" class="full">Raleway</button>
+										<button onclick="setFontFamilyTo('Roboto-Regular')" class="full">Roboto</button>
+										<button onclick="setFontFamilyTo('Satisfy-Regular')" class="full">Satisfy</button>
+										<button onclick="setFontFamilyTo('SourceCodePro-Regular')" class="full">Source Code</button>
+										<button onclick="setFontFamilyTo('Ubuntu-Regular')" class="full">Ubuntu</button>
+									</div>
+									<div id="settingsFontSize" class="hide">
+										<h2>Font Size</h2>
+										<button onclick="setFontSizeTo(18)" class="full">18</button>
+										<button onclick="setFontSizeTo(20)" class="full">20</button>
+										<button onclick="setFontSizeTo(22)" class="full">22</button>
+										<button onclick="setFontSizeTo(24)" class="full">24</button>
+										<button onclick="setFontSizeTo(26)" class="full">26</button>
+										<button onclick="setFontSizeTo(28)" class="full">28</button>
+										<button onclick="setFontSizeTo(30)" class="full">30</button>
+										<button onclick="setFontSizeTo(32)" class="full">32</button>
+									</div>
+									<button id="cancel" class="full">Cancel</button>
+								</div>
+								<br>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="menuBackground" class="hide">
+			<div id="menuProfile">
+				<div>
+					<img class="menuIcon" src="pereson.svg" draggable="false">
+					<br>Profile
+				</div>
+			</div>
+			<div id="menuSettings">
+				<div>
+					<img class="menuIcon" src="cog.svg" draggable="false">
+					<br>Settings
+				</div>
+			</div>
+			<div id="menuVersions">
+				<div>
+					<img class="menuIcon" src="versions.svg" draggable="false">
+					<br>Versions
+				</div>
+			</div>
+			<div id="menuViewHistory">
+				<div>
+					<img class="menuIcon" src="clock.svg" draggable="false">
+					<br>View History
+				</div>
+			</div>
+			<div id="menuhighlights">
+				<div>
+					<img class="menuIcon" src="lines.svg" draggable="false">
+					<br>View Highlights
+				</div>
+			</div>
+			<div id="menuCrossReferences">
+				<div>
+					<img class="menuIcon" src="reference.svg" draggable="false">
+					<br>Cross References
+				</div>
+			</div>
+			<div id="menuPlayAudio">
+				<div>
+					<img class="menuIcon" src="play.svg" draggable="false">
+					<br>Play Audio
+				</div>
+			</div>
+			<div id="menuHighlightSelection">
+				<div>
+					<img class="menuIcon" src="highlighter.svg" draggable="false">
+					<br>Highlight Selection
+				</div>
+			</div>
+			<div id="menuCopy">
+				<div>
+					<img class="menuIcon" src="copy.svg" draggable="false">
+					<br>Copy
+				</div>
+			</div>
+		</div>
+		<div id="fullscreenBackground" class="hide">
+			<div class="middle">
+				<div class="inner">
+					<div class="fullscreenTitleContainer">
+						<span id="back">
+							<img src="left.svg">
+						</span>
+						<h2 align="center">
+							<span id="fullscreenTitle"></span>
+						</h2>
+					</div>
+					<div class="container">
+						<div class="padding">
+							<div class="fullscreenTextTopPadding"></div>
+							<div>
+								<p><span id="fullscreenText"></span></p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="bridge"></div>
+		<script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-auth.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
+		<script>
+
+			//MARK: Launch Firebase
+
+			var configuration = {
+				apiKey: "AIzaSyC4gdj4krrDlUcvJBxj8eB72KwGfaySCXk",
+				authDomain: "quick-bible-ios.firebaseapp.com",
+				databaseURL: "https://quick-bible-ios.firebaseio.com",
+				projectId: "quick-bible-ios",
+				storageBucket: "quick-bible-ios.appspot.com",
+				messagingSenderId: "976670996361",
+				appId: "1:976670996361:web:0d2f4a8c0943e3f30d1358"
+			};
+			firebase.initializeApp(configuration);
+
+			//MARK: Define Elements
+
+			const body = document.getElementById("body"),
+				mainBackground = document.getElementById("mainBackground"),
+				displayBackground = document.getElementById("displayBackground"),
+				settingsBackground = document.getElementById("settingsBackground"),
+				menuBackground = document.getElementById("menuBackground"),
+				fullscreenBackground = document.getElementById("fullscreenBackground"),
+				settings = document.getElementById("settings"),
+				settingsFontFamily = document.getElementById("settingsFontFamily"),
+				settingsFontSize = document.getElementById("settingsFontSize"),
+				content = document.getElementById("content"),
+				nightMode = document.getElementById("nightMode"),
+				random = document.getElementById("random"),
+				next = document.getElementById("next"),
+				previous = document.getElementById("previous"),
+				settingFullscreen = document.getElementById("settingFullscreen"),
+				settingFontFamily = document.getElementById("settingFontFamily"),
+				settingFontSize = document.getElementById("settingFontSize"),
+				settingClearHistory = document.getElementById("settingClearHistory"),
+				settingClearHighlights = document.getElementById("settingClearHighlights"),
+				cancel = document.getElementById("cancel"),
+				back = document.getElementById("back"),
+				profileSignUp = document.getElementById("profileSignUp"),
+				profileSignIn = document.getElementById("profileSignIn"),
+				profileSignOut = document.getElementById("profileSignOut"),
+				profileUpdate = document.getElementById("profileUpdate"),
+				profileNightMode = document.getElementById("profileNightMode"),
+				profileResetPassword = document.getElementById("profileResetPassword"),
+				profileGoToBible = document.getElementById("profileGoToBible"),
+				profileUsername = document.getElementById("profileUsername"),
+				profileEmail = document.getElementById("profileEmail"),
+				profilePassword = document.getElementById("profilePassword"),
+				topLabel = document.getElementById("topLabel"),
+				bottomLabel = document.getElementById("bottomLabel"),
+				fullscreenTitle = document.getElementById("fullscreenTitle"),
+				fullscreenText = document.getElementById("fullscreenText"),
+				bridge = document.getElementById("bridge"),
+				booksOfBible = ["Genesis","Exodus","Leviticus","Numbers","Deuteronomy","Joshua","Judges","Ruth","1 Samuel","2 Samuel","1 Kings","2 Kings","1 Chronicles","2 Chronicles","Ezra","Nehemiah","Esther","Job","Psalms","Proverbs","Ecclesiastes","Song of Solomon","Isaiah","Jeremiah","Lamentations","Ezekiel","Daniel","Hosea","Joel","Amos","Obadiah","Jonah","Micah","Nahum","Habakkuk","Zephaniah","Haggai","Zechariah","Malachi","Matthew","Mark","Luke","John","Acts","Romans","1 Corinthians","2 Corinthians","Galatians","Ephesians","Philippians","Colossians","1 Thessalonians","2 Thessalonians","1 Timothy","2 Timothy","Titus","Philemon","Hebrews","James","1 Peter","2 Peter","1 John","2 John","3 John","Jude","Revelation"],
+				booksOfBiblePaths = ["Genesis","Exodus","Leviticus","Numbers","Deuteronomy","Joshua","Judges","Ruth","1_Samuel","2_Samuel","1_Kings","2_Kings","1_Chronicles","2_Chronicles","Ezra","Nehemiah","Esther","Job","Psalms","Proverbs","Ecclesiastes","Songs","Isaiah","Jeremiah","Lamentations","Ezekiel","Daniel","Hosea","Joel","Amos","Obadiah","Jonah","Micah","Nahum","Habakkuk","Zephaniah","Haggai","Zechariah","Malachi","Matthew","Mark","Luke","John","Acts","Romans","1_Corinthians","2_Corinthians","Galatians","Ephesians","Philippians","Colossians","1_Thessalonians","2_Thessalonians","1_Timothy","2_Timothy","Titus","Philemon","Hebrews","James","1_Peter","2_Peter","1_John","2_John","3_John","Jude","Revelation"],
+				numberOfChaptersInBooksOfBible = [50,40,27,36,34,24,21,4,31,24,22,25,29,36,10,13,10,42,150,31,12,8,66,52,5,48,12,14,3,9,1,4,7,3,3,3,2,14,4,28,16,24,21,28,16,16,13,6,6,4,4,5,3,6,4,3,1,13,5,5,3,5,1,1,1,22];
+
+			//MARK: Define Variables
+
+			var database = firebase.database(),
+				xmlWeb = new XMLHttpRequest(),
+				xmlRef = new XMLHttpRequest(),
+				xmlBible,
+				crossReferencesResponse,
+				crossReferencesString,
+				crossReferences,
+				selectedVerses = ["x"],
+				selectedVersesInChapter = [""],
+				formerSelectedVerses,
+				versesInCurrentChapter = [""],
+				highlights = [],
+				scriptureHistory = [],
+				scriptureHighlights = [],
+				scriptureReferences = [],
+				uid = "0",
+				currentPage = "profile",
+				currentFontFamily = "Poppins-Regular",
+				bottomNavigationMode = "Verse",
+				contentMode = "",
+				chosenContentMode = "",
+				currentBook = "1",
+				currentChapter = "1",
+				currentVerse = "1",
+				currentBookValue = "1",
+				currentChapterValue = "1",
+				clipboardText = "",
+				scrollCommand,
+				isScrolling,
+				shouldCloseMenu = true,
+				userSignedIn = false,
+				deviceUsesTouch = false,
+				night = false,
+				isMeta = false,
+				bookFreeze = false,
+				shouldFreeze = false,
+				shouldClearSelection = false,
+				menuIsActive = false,
+				versesAreSelected = false,
+				bottomNavigationIsActive = false,
+				topNavigationIsActive = false,
+				bottomCenterNavigationIsActive = false,
+				formerBook,
+				formerChapter,
+				formerVerse,
+				numberOfVersesInChapter = 0,
+				currentItem = 0,
+				currentFontSize = 18,
+				topLabelElementContentHeight = getElementContentHeight(topLabel),
+				contentEndX,
+				contentEndY,
+				contentStartX,
+				contentStartY,
+				bottomNavigationStartX,
+				bottomNavigationTouchX,
+				bottomNavigationEndX = false,
+				bodyTouchListenerTimestamp = parseInt(Date.now() * .001),
+				sideNavigationTimer,
+				bookFreezeTimer,
+				menuTimer;
+
+			//MARK: Import Resources
+
+			xmlWeb.onreadystatechange = () => {
+				if (xmlWeb.readyState == 4 && xmlWeb.status == 200) {
+					const xmlDoc = xmlWeb.responseXML;
+					xmlBible = xmlDoc.getElementsByTagName("book");
+				}
+			};
+			xmlWeb.open("GET", "web.xml", true);
+			xmlWeb.send();
+			xmlRef.open("GET", "./ref.csv", false);
+			xmlRef.onreadystatechange = () => {
+				if(xmlRef.readyState === 4) {
+					if(xmlRef.status === 200 || xmlRef.status == 0) {
+						crossReferencesResponse = xmlRef.responseText;
+						crossReferencesString = crossReferencesResponse + "";
+						crossReferences = crossReferencesString.split(/\r?\n|\r/);
+					}
+				}
+			}
+			xmlRef.send(null);
+
+			//MARK: Listen to Firebase
+
+			firebase.auth().onAuthStateChanged(user => {
+				try {
+					uid = user.uid;
+				} catch(error) {
+					console.error(error);
+				}
+				if (user && firebase != "0") {
+					userSignedIn = true;
+					uid = user.uid;
+					database.ref("/users/" + uid).on("value", snapshot => {
+						currentPage = snapshot.val().currentPage;
+						setCurrentPage();
+						username = snapshot.val().username;
+						document.getElementById("profileUsername").value = username;
+						email = snapshot.val().email;
+						document.getElementById("profileEmail").value = email;
+						if (currentBook != currentBookValue || currentChapter != currentChapterValue) {
+							shouldClearSelection = true;
+						} else {
+							shouldClearSelection = false;
+						}
+						selectedVerses = snapshot.val().selectedVerses;
+						currentBook = snapshot.val().currentBook;
+						currentChapter = snapshot.val().currentChapter;
+						currentVerse = snapshot.val().currentVerse;
+						bottomNavigationMode = snapshot.val().bottomNavigationMode;
+						currentFontFamily = snapshot.val().currentFontFamily;
+						currentFontSize = snapshot.val().currentFontSize;
+						night = snapshot.val().night;
+						setStyle();
+						locate(currentBook - 1, currentChapter - 1, currentVerse - 1, false);
+						currentBookValue = currentBook;
+						currentChapterValue = currentChapter;
+						blurProfile();
+					});
+					profileUpdate.classList.remove("gray");
+					profileNightMode.classList.remove("gray");
+					profileGoToBible.classList.remove("gray");
+				} else {
+					userSignedIn = false;
+					document.getElementById("profileUsername").value = "";
+					document.getElementById("profileEmail").value = "";
+					document.getElementById("profilePassword").value = "";
+					profileUpdate.classList.add("gray");
+					profileNightMode.classList.add("gray");
+					profileGoToBible.classList.add("gray");
+				}
+			});
+
+			//MARK: Launch
+
+			blurProfile();
+			setCurrentPage();
+			bottomLabelAddEventListeners();
+
+			//MARK: Profile - Listeners - Keyup
+
+			profileUsername.addEventListener("keyup", e => {
+				enterKey(e);
+			});
+			profileEmail.addEventListener("keyup", e => {
+				enterKey(e);
+			});
+			profilePassword.addEventListener("keyup", e => {
+				enterKey(e);
+			});
+
+			//MARK: Profile - Listeners - Click
+
+			profileSignUp.addEventListener("click", e => {
+				signUp();
+			});
+			profileSignIn.addEventListener("click", e => {
+				signIn();
+			});
+			profileSignOut.addEventListener("click", e => {
+				signOut();
+			});
+			profileUpdate.addEventListener("click", e => {
+				update();
+			})
+			profileNightMode.addEventListener("click", e => {
+				toggleNight();
+			})
+			profileResetPassword.addEventListener("click", e => {
+				const email = profileEmail.value;
+				if ( (email != "") ) {
+					const auth = firebase.auth();
+					auth.sendPasswordResetEmail(email).then(function() {
+						alert("Email sent.");
+					}).catch(function(error) {
+						alert(error);
+					});
+				} else {
+					alert("please type email");
+				}
+			})
+			profileGoToBible.addEventListener("click", e => {
+				if (userSignedIn) {
+					currentPage = "bible";
+					database.ref("users/" + uid).update( {
+						currentPage: currentPage
+					});
+					setCurrentPage();
+				} else {
+					alert("No user is signed in");
+				}
+			})
+
+			//MARK: Profile - Functions
+
+			function signIn() {
+				const email = profileEmail.value;
+				const pass = profilePassword.value;
+				const auth = firebase.auth();
+				if ( (email != "") && (pass != "") ) {
+					const promise = auth.signInWithEmailAndPassword(email,pass).catch(function(error) {
+						var errorCode = error.code;
+						var errorMessage = error.message;
+						alert(error.message);
+						signUp();
+					});
+					promise.catch(e => alert(e.message) );
+				} else {
+					alert("please type email and password");
+				}
+			}
+			function signOut() {
+				if (userSignedIn) {
+					firebase.auth().signOut().then(function() {
+						night = false;
+						currentFontSize = 18;
+						currentFontFamily = "Poppins-Regular"
+						setStyle();
+					}, function(error) {
+						alert("Sign Out Error" + error);
+					});
+				} else {
+					alert("No user is signed in");
+				}
+			}
+			function signUp() {
+				const username = profileUsername.value;
+				const email = profileEmail.value;
+				const pass = profilePassword.value;
+				const auth = firebase.auth;
+				if ( (username != "") && (email != "") && (pass != "") ) {
+					firebase.auth().createUserWithEmailAndPassword(email, pass).then(cred => {
+						uid = cred.user.uid;
+						database.ref("users/" + uid).update( {
+							username: profileUsername.value,
+							email: profileEmail.value,
+							night: false,
+							bottomNavigationMode: "Verse",
+							currentPage: "bible",
+							currentBook: 1,
+							currentChapter: 1,
+							currentVerse: 1,
+							currentFontFamily: "Poppins-Regular",
+							currentFontSize: 18,
+							selectedVerses: {"0":"x"}
+						});
+					}).catch(function(error) {
+						var errorCode = error.code;
+						var errorMessage = error.message;
+						alert(errorMessage);
+					});
+				} else {
+					alert("please type username, email, and password");
+				}
+			}
+			function update() {
+				if (userSignedIn) {
+					if ( (profileUsername.value != "") && (profileEmail.value != "") ) {
+						database.ref("users/" + uid).update( {
+							username: profileUsername.value,
+							email: profileEmail.value
+						});
+						const user = firebase.auth().currentUser;
+						user.updateEmail(profileEmail.value).then(function() {
+						}).catch(function(error) {
+							alert(error);
+						});
+					} else {
+						alert("please type username and email");
+					}
+				} else {
+					alert("No user is signed in");
+				}
+			}
+			function enterKey(e) {
+				if (e.key === "Enter") {
+					if (userSignedIn) {
+						update();
+					} else {
+						signIn();
+					}
+				}
+			}
+			function blurProfile() {
+				for (var i = 0; i < 1500; i = i + 100) {
+					setTimeout(() => {
+						if (currentPage != "profile") {
+							profileUsername.blur();
+							profileEmail.blur();
+							profilePassword.blur();
+						}
+					}, i);
+				}
+			}
+
+			//MARK: Bible - Listeners - Keydown
+
+			window.addEventListener("keydown", e => {
+				if (e.defaultPrevented) {
+					return;
+				}
+				if (!isMeta) {
+					switch (e.key) {
+						case "Up":
+						case "ArrowUp":
+							previousVerse();
+							break;
+						case "Down":
+						case "ArrowDown":
+							nextVerse();
+							break;
+						case "Left":
+						case "ArrowLeft":
+							previousChapter();
+							break;
+						case "Right":
+						case "ArrowRight":
+							nextChapter();
+							break;
+						case "PageUp":
+							previousBook();
+							break;
+						case "PageDown":
+							nextBook();
+							break;
+						default:
+							return;
+					}
+					locate(currentBook - 1, currentChapter - 1, currentVerse - 1, false);
+					event.preventDefault();
+				}
+			}, true);
+
+			//MARK: Bible - Window - Listeners
+
+			window.addEventListener("touchmove", e => {
+				deviceUsesTouch = true;
+				if (bottomNavigationIsActive) {
+					e.preventDefault();
+					bottomNavigationMove(e.touches[0]);
+				}
+				if (topNavigationIsActive === true) {
+					e.preventDefault();
+					topNavigationMove(e.touches[0]);
+				}
+			}, {passive: false})
+			window.addEventListener("mousemove", e => {
+				if (bottomNavigationIsActive) {
+					body.classList.add("userSelectNone");
+					e.preventDefault();
+					bottomNavigationMove(e);
+				}
+				if (topNavigationIsActive === true) {
+					topNavigationMove(e);
+				}
+			})
+			window.addEventListener("touchend", e => {
+				deviceUsesTouch = true;
+				topNavigationEnd();
+				bottomNavigationEnd();
+			});
+			window.addEventListener("mouseup", e => {
+				topNavigationEnd();
+				bottomNavigationEnd();
+				body.classList.remove("userSelectNone");
+			});
+			window.addEventListener("scroll", () => {
+				if (currentPage == "bible" && isMeta == false) {
+					window.clearTimeout( isScrolling );
+					const leftImage = document.getElementById("leftButton").childNodes[0];
+					const rightImage = document.getElementById("rightButton").childNodes[0];
+					topLabelElementContentHeight = getElementContentHeight(topLabel);
+					const contentTop = content.offsetTop;
+					const contentBottom = (content.offsetTop + content.offsetHeight);
+					const upperLimit = contentTop - (currentFontSize / 2);
+					const bottomLimit = contentBottom + (currentFontSize / 2);
+					const bodyElement = document.body, html = document.documentElement;
+					const bodyHeight = Math.max( bodyElement.scrollHeight, bodyElement.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
+					if (content.offsetHeight > bodyElement.offsetHeight) {
+						if (document.body.scrollTop < upperLimit) {
+							leftImage.style.opacity = ".5";
+							scrollCommand = "Previous";
+						} else {
+							leftImage.style.opacity = "1";
+							scrollCommand = "Stay";
+						}
+						if ( (document.body.scrollTop + window.innerHeight) > (bodyHeight - (topLabelElementContentHeight / 2) ) + (currentFontSize / 2) ) {
+							rightImage.style.opacity = ".5";
+							scrollCommand = "Next";
+						} else {
+							rightImage.style.opacity = "1";
+						}
+					} else {
+						scrollCommand = "Stay";
+					}
+					const lastVerseDiv = document.getElementById(numberOfVersesInChapter + "Verse");
+					const lastVerseDivMargin = (getElementContentHeight(bottomLabel) * 1.5);
+					isScrolling = setTimeout(() => {
+						if (document.body.scrollTop > currentFontSize / 4 && document.body.scrollTop < contentTop) {
+							content.childNodes[0].scrollIntoView();
+							window.scrollBy(0, -1 * ( getElementContentHeight(topLabel) ) );
+						}
+						if (document.body.scrollTop < contentTop && currentBook == 1 && currentChapter == 1) {
+							content.childNodes[0].scrollIntoView();
+							window.scrollBy(0, -1 * ( getElementContentHeight(topLabel) ) );
+						}
+						if ( (document.body.scrollTop + window.innerHeight) < (bodyHeight - (currentFontSize / 4) ) && (document.body.scrollTop + window.innerHeight) - contentTop > (bodyHeight - lastVerseDivMargin) + (contentTop * 2) ) {
+							lastVerseDiv.scrollIntoView();
+							window.scrollBy(0, -1 * ( getElementContentHeight(topLabel) / 2 ) );
+						}						
+						if ( (document.body.scrollTop + window.innerHeight) - contentTop > (bodyHeight - lastVerseDivMargin) + (contentTop * 2) && currentBook == 66 && currentChapter == 22) {
+							lastVerseDiv.scrollIntoView();
+							window.scrollBy(0, -1 * ( getElementContentHeight(topLabel) / 2 ) );
+						}
+					}, 500);
+					isScrolling = setTimeout(() => {
+						if (scrollCommand == "Previous") {
+							previousChapter();
+						} else if (scrollCommand == "Next") {
+							nextChapter();
+						}
+						storeLocation();
+					}, 1000);
+				}
+			});
+
+			//MARK: Bible - Body - Listeners
+
+			body.addEventListener("touchmove", e => {
+				deviceUsesTouch = true;
+				contentMove(e.touches[0]);
+			}, false)			
+			body.addEventListener("mousemove", e => {
+				contentMove(e);
+			})
+			body.addEventListener("touchend", e => {
+				deviceUsesTouch = true;
+				bodyTouchListener(e);
+			}, false)
+			body.addEventListener("mouseup", e => {
+				bodyTouchListener(e);
+			})
+
+			//MARK: Bible - Body - Functions
+
+			function bodyTouchListener(e) {
+				const timestamp = parseInt(Date.now() * .001);
+				const renderBookListY = e.pageY;
+				if (renderBookListY < topLabelElementContentHeight && timestamp - bodyTouchListenerTimestamp < 0.2) {
+					if (!isMeta) {
+						var contentInnerHTML = "";
+						var last = "";
+						for (var i = 0; i < booksOfBible.length; i++) {
+							if (i == booksOfBible.length - 1) {
+								last = "lastVerse";
+							}
+							contentInnerHTML = contentInnerHTML + "<div id='item" + (i + 1) + "' class='list " + last + "' onclick='goTo(" + (i + 1) + ", 1, 1, true)'>" + booksOfBible[i] + "</div>";
+						}
+						document.getElementById("content").innerHTML = contentInnerHTML;
+						content.childNodes[0].scrollIntoView();
+						window.scrollBy(0, -1 * ( getElementContentHeight(topLabel) ) );
+						setContentMode("Books");
+					}
+				} else {
+					contentEnd(e);
+				}
+			}
+
+			//MARK: Bible - Top - Listeners
+
+			nightMode.addEventListener("click", e => {
+				toggleNight();
+			})
+			topLabel.addEventListener("click", e => {
+				if (isMeta) {
+					locate(currentBook - 1, currentChapter - 1, currentVerse - 1, false);
+				}
+			})
+			topLabel.addEventListener("touchstart", e => {
+				bodyTouchListenerTimestamp = parseInt(Date.now() * .001);
+				topLabelElementContentHeight = getElementContentHeight(topLabel);
+				deviceUsesTouch = true;
+				topNavigationStart(e.touches[0]);
+			}, false)
+			topLabel.addEventListener("mousedown", e => {
+				topLabelElementContentHeight = getElementContentHeight(topLabel);
+				topNavigationStart(e);
+				bodyTouchListenerTimestamp = parseInt(Date.now() * .001);
+			})
+			random.addEventListener("click", e => {
+				goToRandomVerse();
+			})
+
+			//MARK: Bible - Top - Functions
+
+			function toggleNight() {
+				if (userSignedIn) {
+					if (night == false) {
+						night = true;
+						database.ref("users/" + uid).update( {
+							night: night
+						});
+					} else {
+						night = false;
+						database.ref("users/" + uid).update( {
+							night: night
+						});
+					}
+					database.ref("/users/" + uid).once("value").then(function(snapshot) {
+						night = snapshot.val().night;
+						setStyle();
+					});
+				} else {
+					alert("No user is signed in");
+				}
+			}
+			function goToRandomVerse() {
+				currentBook = parseInt(getRandomNumber(1,67) );
+				currentChapter = parseInt(getRandomNumber(1,numberOfChaptersInBooksOfBible[currentBook - 1]) );
+				locate(currentBook - 1, currentChapter - 1, 200, true);
+			}
+			function topNavigationStart(e) {
+				contentEndX = e.clientX;
+				contentEndY = e.clientY;
+				if ( /Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent) ) {
+					if ( contentEndX < getElementContentHeight(topLabel) * 1.25 || contentEndX < getElementContentHeight(topLabel) * 1.25 ) {
+					} else if ( contentEndX > (window.innerWidth - getElementContentHeight(topLabel) * 1.25 ) || contentEndX > (window.innerWidth - getElementContentHeight(topLabel) * 1.25 ) ) {
+					} else {
+						if (!isMeta) {
+							mainBackground.style.display = "none";
+							displayBackground.style.display = "table";
+							document.onselectstart = function() {return false;}
+							topNavigationIsActive = true;
+						}
+					}
+				} else {
+					if ( contentEndX < getElementContentHeight(topLabel) * 1.25 ) {
+					} else if ( contentEndX > (window.innerWidth - getElementContentHeight(topLabel) * 1.25 ) ) {
+					} else {
+						if (!isMeta) {
+							mainBackground.style.display = "none";
+							displayBackground.style.display = "table";
+							document.onselectstart = function() {return false;}
+							topNavigationIsActive = true;
+						}
+					}
+				}
+			}
+			function topNavigationMove(e) {
+				if (topNavigationIsActive) {
+					const w = window.innerWidth;
+					const h = window.innerHeight;
+					const x = e.clientX;
+					const y = e.clientY;
+					var xw = ( x - ( w * 0.1 ) ) / ( w * ( 0.8 ) );
+					if (xw <= 0) {
+						xw = 0;
+					} else if (xw > 1) {
+						xw = 1;
+					}
+					var yh = ( y - ( h * 0.1 ) ) / ( h * ( 0.8 ) );
+					if (yh <= 0) {
+						yh = 0;
+					} else if (yh > 1) {
+						yh = 1;
+					}
+					for (var i = 2; i < 12; i++) {
+						setTimeout(() => {
+							if (currentBook == parseInt(yh * (66) ) ) {
+								shouldFreeze = true;
+							} else {
+								shouldFreeze = false;
+							}
+						}, i * 100);
+					}
+					bookFreezeTimer = setTimeout(() => {
+						if (shouldFreeze && (currentBook == parseInt(yh * (66) ) ) ) {
+							bookFreeze = true;
+						}
+					}, 1250);
+					currentVerse = 1;
+					if (!bookFreeze==true) {
+						currentBook = parseInt(yh * (66) );
+					}
+					if (currentBook < 1) {
+						currentBook = 1;
+					} else if (currentBook > 66) {
+						currentBook = 66;
+					}
+					currentChapter = parseInt(xw * (numberOfChaptersInBooksOfBible[currentBook - 1] ) );
+					if (currentChapter == 0) {
+						currentChapter = 1;
+					}
+					var previousBookLabel = booksOfBible[currentBook - 2];
+					var currentBookLabel = booksOfBible[currentBook - 1];
+					var nextBookLabel = booksOfBible[currentBook];
+					var previousChapterLabel = currentChapter - 1;
+					var currentChapterLabel = currentChapter;
+					var nextChapterLabel = currentChapter + 1;
+					if (!previousBookLabel) {
+						previousBookLabel = "<span class='quarterAlpha'>&bull;</span>"
+					}
+					if (!nextBookLabel) {
+						nextBookLabel = "<span class='quarterAlpha'>&bull;</span>"
+					}
+					if (previousChapterLabel == 0) {
+						previousChapterLabel = "<span class='quarterAlpha'>&bull;</span>";
+					}
+					if (nextChapterLabel > numberOfChaptersInBooksOfBible[currentBook - 1]) {
+						nextChapterLabel = "<span class='quarterAlpha'>&bull;</span>";
+					}
+					document.getElementById("display").innerHTML =
+					" <span class='halfAlpha'>" +
+					previousBookLabel + "</span><br><span>" +
+					currentBookLabel + "</span><br><span class='halfAlpha'>" +
+					nextBookLabel + "</span><br><span class='halfAlpha'>" +
+					previousChapterLabel + "</span> " +
+					currentChapterLabel + " <span class='halfAlpha'>" +
+					nextChapterLabel + "</span>";
+				}
+			}
+			function topNavigationEnd() {
+				if (topNavigationIsActive === true) {
+					if (!isMeta) {
+						storeLocation();
+						setTopLabel(true);
+					}
+					mainBackground.style.display = "table";
+					displayBackground.style.display = "none";
+					topNavigationIsActive = false;
+					bookFreeze = false;
+				}
+				clearTimeout(bookFreezeTimer);
+				document.onselectstart = function() {return true;}
+			}
+			function setTopLabel(content) {
+				if (content) {
+					isMeta = false;
+					document.getElementById("topLabelBook").innerHTML = booksOfBible[currentBook - 1];
+					document.getElementById("topLabelChapter").innerHTML = currentChapter;
+					document.getElementById("topLabelColon").innerHTML = ":";
+					document.getElementById("topLabelVerse").innerHTML = currentVerse;
+					document.getElementById("topLabelType").innerHTML = "";
+				} else {
+					isMeta = true;
+					document.getElementById("topLabelBook").innerHTML = "";
+					document.getElementById("topLabelChapter").innerHTML = "";
+					document.getElementById("topLabelColon").innerHTML = "";
+					document.getElementById("topLabelVerse").innerHTML = "";
+					if (contentMode == "Cross References") {
+						document.getElementById("topLabelBook").innerHTML = booksOfBible[currentBook - 1];
+						document.getElementById("topLabelChapter").innerHTML = currentChapter;
+						document.getElementById("topLabelColon").innerHTML = ":";
+						document.getElementById("topLabelVerse").innerHTML = currentVerse;
+					}
+					document.getElementById("topLabelType").innerHTML = contentMode;
+				}
+			}
+
+			//MARK: Bible - Middle - Listeners - Touchstart
+
+			previous.addEventListener("touchstart", e => {
+				deviceUsesTouch = true;
+				previousStart();
+			}, false)
+			next.addEventListener("touchstart", e => {
+				deviceUsesTouch = true;
+				nextStart();
+			}, false)
+
+			//MARK: Bible - Middle - Listeners - Mousedown
+
+			previous.addEventListener("mousedown", e => {
+				if (!deviceUsesTouch) {
+					previousStart();
+				}
+			})
+			next.addEventListener("mousedown", e => {
+				if (!deviceUsesTouch) {
+					nextStart();
+				}
+			})
+
+			//MARK: Bible - Middle - Listeners - Touchend
+
+			previous.addEventListener("touchend", e => {
+				deviceUsesTouch = true;
+				clearTimeout(sideNavigationTimer);
+			})
+			next.addEventListener("touchend", e => {
+				deviceUsesTouch = true;
+				clearTimeout(sideNavigationTimer);
+			})
+
+			//MARK: Bible - Middle - Listeners - Mouseup
+
+			previous.addEventListener("mouseup", e => {
+				if (!deviceUsesTouch) {
+					clearTimeout(sideNavigationTimer);
+				}
+			})
+			next.addEventListener("mouseup", e => {
+				if (!deviceUsesTouch) {
+					clearTimeout(sideNavigationTimer);
+				}
+			})
+
+			//MARK: Bible - Middle - Functions
+
+			function previousStart() {
+				if (!isMeta) {
+					previousChapter();
+					storeLocation();
+					sideNavigationTimer = setTimeout(() => {
+						previousBook();
+						storeLocation();
+					}, 500)
+				}
+			}
+			function nextStart() {
+				if (!isMeta) {
+					nextChapter();
+					storeLocation();
+					sideNavigationTimer = setTimeout(() => {
+						nextBook();
+						storeLocation();
+					}, 500)
+				}
+			}
+
+			//MARK: Bible - Bottom - Listeners
+
+			function bottomLabelAddEventListeners() {
+				bottomLabel.addEventListener("touchstart", e => {
+					deviceUsesTouch = true;
+					bottomNavigationStart(e.touches[0]);
+				}, false)
+				bottomLabel.addEventListener("mousedown", e => {
+					if (!deviceUsesTouch) {
+						bottomNavigationStart(e);
+					}
+				}, false)
+			}
+
+			//MARK: Bible - Bottom - Functions
+
+			function previousBook() {
+				if (currentBook != 1) {
+					currentBook = currentBook - 1;
+					currentVerse = 1;
+					currentChapter = 1;
+				}
+			}
+			function previousChapter() {
+				if (currentChapter != 1) {
+					currentChapter = currentChapter - 1;
+					currentVerse = 1;
+				} else if (currentBook != 1) {
+					currentBook = currentBook - 1;
+					currentVerse = 1;
+					currentChapter = numberOfChaptersInBooksOfBible[currentBook - 1];
+				}
+			}
+			function previousVerse() {
+				if (currentVerse != 1) {
+					currentVerse = currentVerse - 1;
+				}
+			}
+			function nextBook() {
+				if (currentBook != 66) {
+					currentBook = currentBook + 1;
+					currentVerse = 1;
+					currentChapter = 1;
+				}
+			}
+			function nextChapter() {
+				if (currentChapter != numberOfChaptersInBooksOfBible[currentBook - 1]) {
+					currentChapter = currentChapter + 1;
+					currentVerse = 1;
+				} else {
+					if (currentBook != 66) {
+						currentBook = currentBook + 1;
+						currentVerse = 1;
+						currentChapter = 1;
+					}
+				}
+			}
+			function nextVerse() {
+				if (currentVerse != numberOfVersesInChapter) {
+					currentVerse = currentVerse + 1;
+				}
+			}
+			function bottomNavigationStart(e) {
+				var w = window.innerWidth;
+				if (!bottomNavigationIsActive) {
+					bottomNavigationIsActive = true;
+					x = e.clientX;
+					bottomNavigationTouchX = x;
+					bottomNavigationStartX = ( x - ( w * 0.1 ) ) / ( w * ( 0.8 ) );
+					if (bottomNavigationStartX <= 0) {
+						bottomNavigationStartX = 0;
+					} else if (bottomNavigationStartX > 1) {
+						bottomNavigationStartX = 1;
+					}
+					if (bottomNavigationTouchX > getElementContentHeight(bottomLabel) && bottomNavigationTouchX < (w - getElementContentHeight(bottomLabel) ) ) {
+						bottomCenterNavigationIsActive = true;
+					}
+					if (isMeta) {
+						if (contentMode == "History") {
+							currentItem = parseInt( (bottomNavigationEndX * scriptureHistory.length) + 1);
+						} else if (contentMode == "Highlights") {
+							currentItem = parseInt( (bottomNavigationEndX * scriptureHighlights.length) + 1);
+						} else if (contentMode == "Cross References") {
+							currentItem = parseInt( (bottomNavigationEndX * scriptureReferences.length) + 1);
+						} else if (contentMode == "Books") {
+							currentItem = parseInt( (bottomNavigationEndX * 66) - 1);
+						}
+					} else {
+						formerBook = currentBook;
+						formerChapter = currentChapter;
+						formerVerse = currentVerse;
+					}
+				}
+			}
+			function bottomNavigationMove(e) {
+				const w = window.innerWidth;
+				const x = e.clientX;
+				bottomNavigationTouchX = x;
+				bottomNavigationEndX = ( x - ( w * 0.1 ) ) / ( w * ( 0.8 ) );
+				if (bottomNavigationEndX <= 0) {
+					bottomNavigationEndX = 0;
+				} else if (bottomNavigationEndX > 1) {
+					bottomNavigationEndX = 1;
+				}
+				var denominator = 0;
+				if (isMeta) {
+					if (contentMode == "History") {
+						currentItem = parseInt( (bottomNavigationEndX * scriptureHistory.length) - 1);
+						denominator = scriptureHistory.length;
+					} else if (contentMode == "Highlights") {
+						currentItem = parseInt( (bottomNavigationEndX * scriptureHighlights.length) - 1);
+						denominator = scriptureHighlights.length;
+					} else if (contentMode == "Cross References") {
+						currentItem = parseInt( (bottomNavigationEndX * scriptureReferences.length) - 1);
+						denominator = scriptureReferences.length;
+					} else if (contentMode == "Books") {
+						currentItem = parseInt( (bottomNavigationEndX * 66) - 1);
+						denominator = 66;
+					}
+					if (currentItem < 0) {
+						currentItem = 0;
+					}
+					setBottomLabel(false);
+					window.scrollTo(0, bottomNavigationEndX * content.scrollHeight);
+					const item = document.getElementById("item" + currentItem);
+					item.scrollIntoView();
+					if (currentItem < denominator - 1 ) {
+						window.scrollBy(0, -1 * ( getElementContentHeight(topLabel) ) );
+					}
+				} else {
+					if (bottomCenterNavigationIsActive) {
+						if (bottomNavigationMode == "Book") {
+							currentBook = parseInt(bottomNavigationEndX * 66);
+							if (currentBook == 0) {
+								currentBook = 1;
+							}
+							currentChapter = 1;
+							currentVerse = 1;
+						}
+						if (bottomNavigationMode == "Chapter") {
+							currentChapter = parseInt(bottomNavigationEndX * (numberOfChaptersInBooksOfBible[currentBook - 1] ) );
+							if (currentChapter == 0) {
+								currentChapter = 1;
+							}
+							currentVerse = 1;
+						}
+						if (bottomNavigationMode == "Verse") {
+							currentVerse = parseInt(bottomNavigationEndX * numberOfVersesInChapter );
+							if (currentVerse == 0) {
+								currentVerse = 1;
+							}
+						}
+					}
+					locate(currentBook - 1, currentChapter - 1, currentVerse - 1, false);
+				}
+			}
+			function bottomNavigationEnd() {
+				const w = window.innerWidth;
+				if (bottomNavigationIsActive) {
+					if (isMeta) {
+						if (contentMode == "History") {
+							currentItem = parseInt( (bottomNavigationEndX * scriptureHistory.length) + 1);
+						} else if (contentMode == "Highlights") {
+							currentItem = parseInt( (bottomNavigationEndX * scriptureHighlights.length) + 1);
+						} else if (contentMode == "Cross References") {
+							currentItem = parseInt( (bottomNavigationEndX * scriptureReferences.length) + 1);
+						} else if (contentMode == "Books") {
+							currentItem = parseInt( (bottomNavigationEndX * 66) - 1);
+						}
+					} else {
+						if (bottomNavigationEndX == false) {
+							bottomNavigationEndX = bottomNavigationStartX;
+						}
+						if (bottomNavigationStartX < (bottomNavigationEndX + 0.025) && bottomNavigationStartX > (bottomNavigationEndX - 0.025) ) {
+							if (!bottomCenterNavigationIsActive) {
+								currentBook = formerBook;
+								currentChapter = formerChapter;
+								currentVerse = formerVerse;
+							}
+							if (bottomNavigationTouchX < getElementContentHeight(bottomLabel) ) {
+								if (bottomNavigationMode == "Verse") {
+									previousVerse();
+								} else if (bottomNavigationMode == "Chapter") {
+									previousChapter();
+								} else if (bottomNavigationMode == "Book") {
+									previousBook();
+								}
+							} else if (bottomNavigationTouchX > (w - getElementContentHeight(bottomLabel) ) ) {
+								if (bottomNavigationMode == "Verse") {
+									nextVerse();
+								} else if (bottomNavigationMode == "Chapter") {
+									nextChapter();
+								} else if (bottomNavigationMode == "Book") {
+									nextBook();
+								}
+							}
+							if (bottomNavigationTouchX < w / 2 && bottomNavigationTouchX > getElementContentHeight(bottomLabel) ) {
+								if (bottomNavigationMode == "Verse") {
+									bottomNavigationMode = "Book";
+								} else if (bottomNavigationMode == "Book") {
+									bottomNavigationMode = "Chapter";
+								} else if (bottomNavigationMode == "Chapter") {
+									bottomNavigationMode = "Verse";
+								}
+							} else if (bottomNavigationTouchX > w / 2 && bottomNavigationTouchX < (w - getElementContentHeight(bottomLabel) ) ) {
+								if (bottomNavigationMode == "Verse") {
+									bottomNavigationMode = "Chapter";
+								} else if (bottomNavigationMode == "Chapter") {
+									bottomNavigationMode = "Book";
+								} else if (bottomNavigationMode == "Book") {
+									bottomNavigationMode = "Verse";
+								}
+							}
+							database.ref("users/" + uid).update( {
+								bottomNavigationMode: bottomNavigationMode
+							});
+						}
+						setTopLabel(true);
+						storeLocation();
+					}
+				}
+				bottomNavigationEndX = false;
+				bottomCenterNavigationIsActive = false;
+				bottomNavigationIsActive = false;
+			}
+			function setBottomLabel(content) {
+				var numerator = 0;
+				var denominator = 0;
+				var mode = bottomNavigationMode;
+				if (content) {
+					if (bottomNavigationMode == "Book") {
+						numerator = currentBook;
+						denominator = 66;
+					} else if (bottomNavigationMode == "Chapter") {
+						numerator = currentChapter;
+						denominator = numberOfChaptersInBooksOfBible[currentBook - 1];
+					} else if (bottomNavigationMode == "Verse") {
+						numerator = currentVerse;
+						denominator = numberOfVersesInChapter;
+					}
+				} else {
+					numerator = currentItem + 1;
+					mode = contentMode;
+					if (contentMode == "History") {
+						denominator = scriptureHistory.length;
+					} else if (contentMode == "Highlights") {
+						denominator = scriptureHighlights.length;
+					} else if (contentMode == "Cross References") {
+						denominator = scriptureReferences.length;
+					} else if (contentMode == "Books") {
+						denominator = 66;
+					}
+				}
+				document.getElementById("bottomLabelMode").innerHTML = mode;
+				document.getElementById("bottomLabelNumerator").innerHTML = numerator;
+				document.getElementById("bottomLabelDenominator").innerHTML = denominator;
+				bottomLabelAddEventListeners();
+				const leftImage = document.getElementById("leftButton").childNodes[0];
+				const rightImage = document.getElementById("rightButton").childNodes[0];
+				if (content) {
+					leftImage.style.opacity = 1;
+					rightImage.style.opacity = 1;
+					leftImage.style.cursor = "w-resize";
+					rightImage.style.cursor = "e-resize";
+					if (currentPage == "bible") {
+						previous.style.cursor = "w-resize";
+						next.style.cursor = "e-resize";
+					}
+					topLabel.style.cursor = "move";
+				} else {
+					leftImage.style.opacity = 0;
+					rightImage.style.opacity = 0;
+					leftImage.style.cursor = "ew-resize";
+					rightImage.style.cursor = "ew-resize";
+					previous.style.cursor = "default";
+					next.style.cursor = "default";
+					topLabel.style.cursor = "pointer";
+				}
+			}
+
+			//MARK: Bible - Content - Listeners
+
+			content.addEventListener("touchstart", e => {
+				deviceUsesTouch = true;
+				contentStart(e.touches[0]);
+			}, false)
+			content.addEventListener("mousedown", e => {
+				contentStart(e);
+			})
+			content.addEventListener("touchmove", e => {
+				deviceUsesTouch = true;
+				contentMove(e.touches[0]);
+			}, false)
+			content.addEventListener("mousemove", e => {
+				contentMove(e);
+			})
+			content.addEventListener("touchend", e => {
+				deviceUsesTouch = true;
+				contentEnd(e);
+			}, false)
+			content.addEventListener("mouseup", e => {
+				contentEnd(e);
+			})
+
+			//MARK: Bible - Content - Functions
+
+			function contentStart(e) {
+				contentStartX = e.clientX;
+				contentStartY = e.clientY;
+				formerSelectedVerses = selectedVerses;
+				menuTimer = setTimeout(() => {
+					openmenu();
+				}, 500)
+			}
+			function contentMove(e) {
+				if (menuIsActive == true && deviceUsesTouch == false) {
+					e.preventDefault();
+				}
+				contentEndX = e.clientX;
+				contentEndY = e.clientY;
+				const windowWidth = window.innerWidth;
+				const windowHeight = window.innerHeight;
+				if (menuIsActive == true) {
+					document.getElementById("menuProfile").classList.remove("hover");
+					document.getElementById("menuSettings").classList.remove("hover");
+					document.getElementById("menuVersions").classList.remove("hover");
+					document.getElementById("menuViewHistory").classList.remove("hover");
+					document.getElementById("menuhighlights").classList.remove("hover");
+					document.getElementById("menuCrossReferences").classList.remove("hover");
+					document.getElementById("menuPlayAudio").classList.remove("hover");
+					document.getElementById("menuHighlightSelection").classList.remove("hover");
+					document.getElementById("menuCopy").classList.remove("hover");
+					if (contentEndY < windowHeight / 3) {
+						if (contentEndX < windowWidth / 3) {
+							const area = document.getElementById("menuProfile");
+							area.classList.add("hover");
+						}
+						if ( (contentEndX > windowWidth / 3) && (contentEndX < windowWidth * (2 / 3) ) ) {
+							const area = document.getElementById("menuSettings");
+							area.classList.add("hover");
+						}
+						if (contentEndX > windowWidth * (2 / 3) ) {
+							const area = document.getElementById("menuVersions");
+							area.classList.add("hover");
+						}
+					}
+					if ( (contentEndY > windowHeight / 3) && (contentEndY < windowHeight * (2 / 3) ) ) {
+						if (contentEndX < windowWidth / 3) {
+							const area = document.getElementById("menuViewHistory");
+							area.classList.add("hover");
+						}
+						if ( (contentEndX > windowWidth / 3) && (contentEndX < windowWidth * (2 / 3) ) ) {
+							const area = document.getElementById("menuhighlights");
+							area.classList.add("hover");
+						}
+						if (contentEndX > windowWidth * (2 / 3) ) {
+							const area = document.getElementById("menuCrossReferences");
+							area.classList.add("hover");
+						}
+					}
+					if (contentEndY > windowHeight * (2 / 3) ) {
+						if (contentEndX < windowWidth / 3) {
+							const area = document.getElementById("menuPlayAudio");
+							area.classList.add("hover");
+						}
+						if ( (contentEndX > windowWidth / 3) && (contentEndX < windowWidth * (2 / 3) ) ) {
+							const area = document.getElementById("menuHighlightSelection");
+							area.classList.add("hover");
+						}
+						if (contentEndX > windowWidth * (2 / 3) ) {
+							const area = document.getElementById("menuCopy");
+							area.classList.add("hover");
+						}
+					}
+				}
+				if (contentStartX > (contentEndX - 15) && contentStartX < (contentEndX + 15) && contentStartY > (contentEndY - 15) && contentStartY < (contentEndY + 15) ) {} else {
+					clearTimeout(menuTimer);
+				}
+			}
+			function contentEnd(e) {
+				clearTimeout(menuTimer);
+				if (deviceUsesTouch) {
+					if (e.changedTouches != null) {
+						contentEndX = e.changedTouches[0].pageX;
+						contentEndY = e.changedTouches[0].pageY;
+					} else {
+						contentEndX = e.clientX;
+						contentEndY = e.clientY;
+					}
+				} else {
+					contentEndX = e.clientX;
+					contentEndY = e.clientY;
+				}
+				const windowWidth = window.innerWidth;
+				const windowHeight = window.innerHeight;
+				if (menuIsActive == true) {
+					closemenu();
+					if (contentEndY < windowHeight / 3) {
+						if (contentEndX < windowWidth / 3) {
+							currentPage = "profile";
+							database.ref("users/" + uid).update( {
+								currentPage: currentPage
+							});
+							setCurrentPage();
+						}
+						if ( (contentEndX > windowWidth / 3) && (contentEndX < windowWidth * (2 / 3) ) ) {
+							mainBackground.style.display = "none";
+							settingsBackground.style.display = "table";
+							settings.classList.remove("hide");
+						}
+						if (contentEndX > windowWidth * (2 / 3) ) {
+							const newUrl = "https://biblehub.com/" + booksOfBiblePaths[currentBook - 1].toLowerCase() + "/" + currentChapter + "-" + currentVerse + ".htm";
+							const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+							if (iOS) {
+								bridge.classList.add("show");
+								bridge.classList.remove("hide");
+								bridge.innerHTML = "<a style='background:white;color:black;font-size:18px;font-family:-apple-system,HelveticaNeue;width:100%;height:100%;margin:0;padding:0;text-align:center;display: flex;align-items: center;justify-content: center;' target='_blank' href='" + newUrl + "'>" + newUrl + "</a>";
+							} else {
+								window.open("https://biblehub.com/" + booksOfBiblePaths[currentBook - 1].toLowerCase() + "/" + currentChapter + "-" + currentVerse + ".htm", "_blank");
+							}
+						}
+					}
+					if ( (contentEndY > windowHeight / 3) && (contentEndY < windowHeight * (2 / 3) ) ) {
+						if (contentEndX < windowWidth / 3) {
+							chosenContentMode = "History";
+							closemenu();
+						}
+						if ( (contentEndX > windowWidth / 3) && (contentEndX < windowWidth * (2 / 3) ) ) {
+							chosenContentMode = "Highlights";
+							closemenu();
+						}
+						if (contentEndX > windowWidth * (2 / 3) ) {
+							chosenContentMode = "Cross References";
+							closemenu();
+						}
+					}
+					if (contentEndY > windowHeight * (2 / 3) ) {
+						if (contentEndX < windowWidth / 3) {
+							closemenu();
+							const newUrl = "https://audio.esv.org/hw/" 
+								+ pad(currentBook,2)
+								+ pad(currentChapter,3)
+								+ pad(currentVerse,3)
+								+ "-"
+								+ pad(currentBook,2)
+								+ pad(currentChapter,3)
+								+ pad(versesInCurrentChapter.length,3)
+							const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+							if (iOS) {
+								bridge.classList.add("show");
+								bridge.classList.remove("hide");
+								bridge.innerHTML = "<a style='background:white;color:black;font-size:18px;font-family:-apple-system,HelveticaNeue;width:100%;height:100%;margin:0;padding:0;text-align:center;display: flex;align-items: center;justify-content: center;' target='_blank' href='" + newUrl + "'>" + newUrl + "</a>";
+							} else {
+								window.open("https://audio.esv.org/hw/"
+								+ pad(currentBook,2)
+								+ pad(currentChapter,3)
+								+ pad(currentVerse,3)
+								+ "-"
+								+ pad(currentBook,2)
+								+ pad(currentChapter,3)
+								+ pad(versesInCurrentChapter.length,3)
+								, "_blank");
+							}
+						}
+						if ( (contentEndX > windowWidth / 3) && (contentEndX < windowWidth * (2 / 3) ) ) {
+							closemenu();
+							for (var i = 0; i < selectedVerses.length; i++) {
+								if (selectedVerses[i] != "x") {
+									if (!highlights.includes( parseInt(selectedVerses[i]) + 1) ) {
+										highlights.push( (parseInt(selectedVerses[i]) + 1) + "" );
+									}
+								} 
+							}
+							if (selectedVerses.length < 2 && selectedVerses[0] == "x") {
+								if (!highlights.includes( parseInt(selectedVerses[i]) + 1) ) {
+									highlights.push( currentVerse + "" );
+								}
+							}
+							storeHighlights();
+							locate(currentBook - 1, currentChapter - 1, currentVerse - 1, false);
+						}
+						if (contentEndX > windowWidth * (2 / 3) ) {
+							closemenu();
+							clipboardText = "";
+							clipboardText = selectedReferences();
+							const lineBreak = "\r\n";
+							const includesX = selectedVerses.includes("x");
+							if ( (selectedVerses.length == 1 && !includesX) || (selectedVerses.length == 2 && includesX) ) {
+								for (var i = 0; i < selectedVersesInChapter.length; i++) {
+									if (selectedVersesInChapter[i]) {
+										clipboardText = booksOfBible[currentBook - 1] + " " + currentChapter + ":" + selectedVersesInChapter[i];
+										clipboardText = clipboardText.replace('. ', lineBreak);
+									}
+								}
+							} else {
+								for (var i = 0; i < selectedVersesInChapter.length; i++) {
+									if (selectedVersesInChapter[i]) {
+										clipboardText = clipboardText + lineBreak + selectedVersesInChapter[i];
+									}
+								}
+								if (!versesAreSelected) {
+									clipboardText = clipboardText + " " + currentChapter + lineBreak;
+									for (var i = 0; i < versesInCurrentChapter.length; i++) {
+										if (versesInCurrentChapter[i]) {
+											clipboardText = clipboardText + versesInCurrentChapter[i] + lineBreak;
+										}
+									}
+								}
+							}
+							clipboardText = clipboardText.replace(/\t/g, '');
+							clipboardText = clipboardText.split("</v>\n").join("");
+							const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+							if (iOS) {
+								bridge.classList.add("show");
+								bridge.classList.remove("hide");
+								bridge.innerHTML = "<a onclick='copy(clipboardText)'>" + clipboardText + "</a>";
+							} else {
+								copy(clipboardText);
+							}
+							/* alert("copied " + selectedReferences() + " to your clipboard") */
+						}
+					}
+				}
+			}
+
+			//MARK: Bible - Settings - Listeners
+
+			settingFullscreen.addEventListener("click", e => {
+				settings.classList.add("hide");
+				mainBackground.style.display = "none";
+				settingsBackground.style.display = "none";
+				fullscreenBackground.classList.remove("hide");
+				fullscreenBackground.classList.add("background");
+				setFullscreen();
+			})
+			back.addEventListener("click", e => {
+				mainBackground.style.display = "table";
+				fullscreenBackground.classList.remove("background");
+				fullscreenBackground.classList.add("hide");
+				const currentVerseId = document.getElementById("currentVerse");
+				mainBackground.style.top = (getElementContentHeight(topLabel) + "px");
+				const lastVerseDiv = document.getElementById(numberOfVersesInChapter + "Verse");
+				lastVerseDiv.style.marginBottom = (getElementContentHeight(bottomLabel) + "px");
+				currentVerseId.scrollIntoView();
+				if (currentVerseId.offsetTop < (getElementContentHeight(content) - window.innerHeight) + (getElementContentHeight(topLabel) + getElementContentHeight(bottomLabel) + getElementContentHeight(currentVerseId) ) ) {
+					window.scrollBy(0, -1 * ( getElementContentHeight(topLabel) ) );
+				}
+			})
+			settingFontFamily.addEventListener("click", e => {
+				shouldCloseMenu = false;
+				settings.classList.add("hide");
+				settingsFontFamily.classList.remove("hide");
+			})
+			settingFontSize.addEventListener("click", e => {
+				shouldCloseMenu = false;
+				settings.classList.add("hide");
+				settingsFontSize.classList.remove("hide");
+			})
+			settingClearHistory.addEventListener("click", e => {
+				closeSettings();
+				database.ref("/users/" + uid + "/history").remove();
+			})
+			settingClearHighlights.addEventListener("click", e => {
+				closeSettings();
+				database.ref("/users/" + uid + "/highlights").remove();
+			})
+			cancel.addEventListener("click", e => {
+				closeSettings();
+			})
+			settingsBackground.addEventListener("click", e => {
+				if (shouldCloseMenu) {
+					closeSettings();
+				}
+				shouldCloseMenu = true;
+			})
+
+			//MARK: Bible - Bridge - Listeners
+
+			bridge.addEventListener("click", e => {
+				bridge.classList.remove("show");
+				bridge.classList.add("hide");
+			})
+
+			//MARK: Bible - Menu
+
+			function openmenu() {
+				menuIsActive = true;
+				mainBackground.style.display = "none";
+				menuBackground.style.display = "block";
+				document.getElementById("menuProfile").classList.remove("hover");
+				document.getElementById("menuSettings").classList.remove("hover");
+				document.getElementById("menuVersions").classList.remove("hover");
+				document.getElementById("menuViewHistory").classList.remove("hover");
+				document.getElementById("menuhighlights").classList.remove("hover");
+				document.getElementById("menuCrossReferences").classList.remove("hover");
+				document.getElementById("menuPlayAudio").classList.remove("hover");
+				document.getElementById("menuHighlightSelection").classList.remove("hover");
+				document.getElementById("menuCopy").classList.remove("hover");
+			}
+
+    		//MARK: Bible - Menu - Top
+
+			function closemenu() {
+				menuIsActive = false;
+				mainBackground.style.display = "table";
+				menuBackground.style.display = "none";
+				summonContent();
+			}
+			function closeSettings() {
+				settings.classList.add("hide");
+				settingsFontSize.classList.add("hide");
+				settingsFontFamily.classList.add("hide");
+				mainBackground.style.display = "table";
+				settingsBackground.style.display = "none";
+				summonContent();
+			}
+			function setFullscreen() {
+				shouldCloseMenu = false;
+				var chapterTextArray = [""];
+				if (xmlBible[currentBook - 1] === undefined) {} else {
+					chapterTextArray = xmlBible[currentBook - 1].childNodes[( (currentChapter - 1 ) * 2 ) + 3].innerHTML.split("<v>");
+				}
+				numberOfVersesInChapter = chapterTextArray.length - 1;
+				var chapterText = "";
+				var verseText = "";
+				versesInCurrentChapter = [""];
+				for (var i = 0; i < numberOfVersesInChapter; i++) {
+					verseText = chapterTextArray[i + 1];
+					versesInCurrentChapter[i] = verseText;
+					if (i == numberOfVersesInChapter - 1) {
+						chapterText += "<div id='" + (i + 1) + "Verse' class='verse " + " lastVerse'>" + verseText + "</div>";
+					} else {
+						chapterText += "<div id='" + (i + 1) + "Verse' class='verse " + "'>" + verseText + "</div>";
+					}
+				}
+				fullscreenText.innerHTML = chapterText;
+				fullscreenTitle.innerHTML = booksOfBible[currentBook - 1] + " " + currentChapter;
+			}
+			function setFontFamilyTo(fontFamily) {
+				database.ref("users/" + uid).update( {
+					currentFontFamily: fontFamily
+				});
+				closeSettings();
+			}
+			function setFontSizeTo(fontSize) {
+				database.ref("users/" + uid).update( {
+					currentFontSize: fontSize
+				});
+				closeSettings();
+			}
+
+			//MARK: Bible - Menu - Middle
+
+			function list(list, navigationMetaMode) {
+				if (list.length > 0) {
+					var listBooks = [];
+					var listChapters = [];
+					var listVerses = [];
+					var contentInnerHTML = "";
+					var last = "";
+					var style = "";
+					for (var i = 0; i < list.length; i++) {
+						if (i == list.length - 1) {
+							last = "lastVerse";
+							style = "style='margin-bottom:" + getElementContentHeight(bottomLabel) + "px'";
+						} else {
+							style = "";
+						}
+						listBooks[i] = parseInt(list[i].split(".")[0]);
+						listChapters[i] = parseInt(list[i].split(".")[1]);
+						listVerses[i] = parseInt(list[i].split(".")[2]);
+						contentInnerHTML = contentInnerHTML + "<div id='item" + (i + 1) + "' " + style + " class='list " + last + "' onclick='goTo("+listBooks[i]+", "+listChapters[i]+", "+listVerses[i]+", true)'>" + booksOfBible[listBooks[i] - 1] + " " + listChapters[i] + ":" + listVerses[i] + "</div>";
+					}
+					document.getElementById("content").innerHTML = contentInnerHTML;
+					content.childNodes[0].scrollIntoView();
+					window.scrollBy(0, -1 * ( getElementContentHeight(topLabel) ) );
+					setContentMode(navigationMetaMode);
+				}
+			}
+			function listHistory() {
+				database.ref("/users/" + uid + "/history").once("value").then(function(snapshot) {
+					scriptureHistory = snapshot.val();
+					var values = [];
+					for (var key in scriptureHistory) {
+						const val = scriptureHistory[key];
+						values.push(val);
+					}
+					scriptureHistory = values.reverse();
+					list(scriptureHistory, "History");
+				});
+				chosenContentMode = "";
+			}
+			function listHighlights() {
+				database.ref("/users/" + uid + "/highlights").once("value").then(function(snapshot) {
+					var highlightsDictionary = snapshot.val();
+					var highlightsBooks = [];
+					var highlightsChapters = [];
+					var highlightsVersesStrings = [];
+					var highlightsBooksWithChaptersWithVerses = [];
+					var highlightsChaptersWithVerses = [];
+					scriptureHighlights = [];
+					for (var key in highlightsDictionary) {
+						const value = highlightsDictionary[key];
+						highlightsBooksWithChaptersWithVerses.push(key);
+						highlightsChaptersWithVerses.push(value);
+					}
+					for (var i = 0; i < highlightsBooksWithChaptersWithVerses.length; i++) {
+						for (var key in highlightsChaptersWithVerses[i]) {
+							const value = highlightsChaptersWithVerses[i][key];
+							highlightsBooks.push(highlightsBooksWithChaptersWithVerses[i]);
+							highlightsChapters.push(key);
+							highlightsVersesStrings.push(value);
+						}
+					}
+					for (var i = 0; i < highlightsBooks.length; i++) {
+						const highlightsVerses = highlightsVersesStrings[i].split(",");
+						for (var j = 0; j < highlightsVerses.length; j++) {
+							const highlightsLocation = highlightsBooks[i] + "." + highlightsChapters[i] + "." + highlightsVerses[j];
+							if (!highlightsLocation.includes("\"") && highlightsBooks[i] > 0 && highlightsChapters[i] > 0 && highlightsVerses[j] > 0) {
+								scriptureHighlights.push(highlightsLocation);
+							}
+						}
+					}
+					list(scriptureHighlights, "Highlights");
+				});
+				chosenContentMode = "";
+			}
+			function listReferences() {
+				var references = [];
+				for (var i = 0; i < crossReferences.length; i++) {
+					if (crossReferences[i].startsWith(currentBook + "." + currentChapter + "." + currentVerse + ",") ) {
+						references.push(crossReferences[i]);
+					}
+				}
+				scriptureReferences = [];
+				var referencesRelevance = [];
+				for (var i = 0; i < references.length; i++) {
+					scriptureReferences[i] = references[i].split(",")[1];
+					referencesRelevance[i] = references[i].split(",")[2];
+				}
+				scriptureReferences = scriptureReferences.filter( function( item, index, inputArray ) {
+					return inputArray.indexOf(item) == index;
+				});
+				var referencesSorted = [];
+				for (var i = 0; i < scriptureReferences.length; i++) 
+					referencesSorted.push( {"reference": scriptureReferences[i], "rank": parseInt(referencesRelevance[i]) });
+				referencesSorted.sort(function(b, a) {
+					return ( (a.rank < b.rank) ? -1 : ( (a.rank == b.rank) ? 0 : 1) );
+				});
+				for (var i = 0; i < referencesSorted.length; i++) {
+					scriptureReferences[i] = referencesSorted[i].reference;
+					referencesRelevance[i] = referencesSorted[i].rank;
+				}
+				setTimeout(() => {
+					list(scriptureReferences, "Cross References");
+					chosenContentMode = "";
+				}, 1);
+			}
+
+			//MARK: Bible - Summon Content
+
+			function summonContent() {
+				if (chosenContentMode == "Cross References") {
+					listReferences();
+				} else if (chosenContentMode == "Highlights") {
+					listHighlights();
+				} else if (chosenContentMode == "History") {
+					listHistory();
+				} else {
+					locate(currentBook - 1, currentChapter - 1, currentVerse - 1, true);
+					selectedVerses = formerSelectedVerses;
+					selectedVerses = selectedVerses.filter(e => e !== -1);
+					selectedVerses = selectedVerses.filter(e => e !== "-1");
+					if (selectedVerses.length < 1) {
+						selectedVerses.push("x");
+					}
+					database.ref("users/" + uid).update( {
+						selectedVerses: selectedVerses
+					});
+				}
+			}
+
+			//MARK: Bible - Location
+
+			function locate(book, chapter, verse, store) {
+				book = parseInt(book);
+				chapter = parseInt(chapter);
+				verse = parseInt(verse);
+				database.ref("/users/" + uid + "/highlights/" + currentBook + "/" + currentChapter ).once("value").then(function(snapshot) {
+					const snapshotValue = snapshot.val();
+					if (snapshotValue != null) {
+						highlights = snapshotValue.split(",");
+					} else {
+						highlights = [];
+					}
+					currentItem = 0;
+					if (shouldClearSelection) {
+						selectedVerses = ["x"];
+						database.ref("users/" + uid).update( {
+							selectedVerses: selectedVerses
+						});
+						shouldClearSelection = false;
+					}
+					var chapterTextArray = [""];
+					if (xmlBible[book] === undefined) {} else {
+						if (chapterTextArray = xmlBible[book].childNodes[(chapter * 2 ) + 3] != null) {
+							chapterTextArray = xmlBible[book].childNodes[(chapter * 2 ) + 3].innerHTML.split("<v>");
+						}
+					}
+					numberOfVersesInChapter = chapterTextArray.length - 1;
+					if (verse == 200) {
+						verse = parseInt(getRandomNumber(1,numberOfVersesInChapter) );
+						currentVerse = verse;
+					}
+					if (store) {
+						storeLocation();
+					}
+					var chapterText = "";
+					var verseText = "";
+					versesInCurrentChapter = [""];
+					selectedVersesInChapter = [""];
+					for (var i = 0; i < numberOfVersesInChapter; i++) {
+						var selected = " ";
+						var highlighted = " ";
+						var erase = "";
+						verseText = chapterTextArray[i+1];
+						versesInCurrentChapter[i] = verseText;
+						if (selectedVerses.includes(i+"") ) {
+							selected = "selected "
+							selectedVersesInChapter[i] = verseText;
+						}
+						if (highlights.includes(i + 1 + "") ) {
+							highlighted = "highlighted ";
+							erase = "<div onclick='eraseHighlight(" + (i + 1) + ")' id='erase-" + (i + 1) + "' class='erase'>&times;</div>";
+						}
+						if (i == verse && i == numberOfVersesInChapter - 1) {
+							chapterText += "<div id='currentVerse'><div id='" + (i + 1) + "Verse' class='verse " + highlighted + selected + "lastVerse'>" + erase + verseText + "</div>";
+						} else if (i == verse) {
+							chapterText += "<div id='currentVerse'><div id='" + (i + 1) + "Verse' class='verse " + highlighted + selected + "' >" + erase + verseText + "</div></div>";
+						} else if (i == numberOfVersesInChapter - 1) {
+							chapterText += "<div id='" + (i + 1) + "Verse' class='verse " + highlighted + selected + " lastVerse'>" + erase + verseText + "</div>";
+						} else {
+							chapterText += "<div id='" + (i + 1) + "Verse' class='verse " + highlighted + selected + "'>" + erase + verseText + "</div>";
+						}
+					}
+					content.innerHTML = chapterText;
+					const currentVerseId = document.getElementById("currentVerse");
+					mainBackground.style.top = (getElementContentHeight(topLabel) + "px");
+					const lastVerseDiv = document.getElementById(numberOfVersesInChapter + "Verse");
+					if (lastVerseDiv != null) {
+						lastVerseDiv.style.marginBottom = (getElementContentHeight(bottomLabel) + "px");
+					}
+					if (currentVerseId != null) {
+						currentVerseId.scrollIntoView();
+						if (currentVerseId.offsetTop < (getElementContentHeight(content) - window.innerHeight) + (getElementContentHeight(topLabel) + getElementContentHeight(bottomLabel) + getElementContentHeight(currentVerseId) ) ) {
+							window.scrollBy(0, -1 * ( getElementContentHeight(topLabel) ) );
+						}
+					}
+					for(verseNumber = 1; verseNumber <= numberOfVersesInChapter; verseNumber++) { 
+						const verse = document.getElementById(verseNumber + "Verse");
+						verse.addEventListener("click", e => {
+							if ( ( contentStartX > (contentEndX - 15) && contentStartX < (contentEndX + 15) && contentStartY > (contentEndY - 15) && contentStartY < (contentEndY + 15) ) || ( deviceUsesTouch == true ) ) {
+								var verseNumber;
+								if (e.target.id == "currentVerse") {
+									verseNumber = currentVerse;
+								}
+								const className = e.target.id + "";
+								const array = className.match("([0-9]*)");
+								verseNumber = array[0];
+								verseNumberString = (verseNumber - 1)+"";
+								selectedVerses = selectedVerses.filter(e => e !== "x");
+								if (selectedVerses.includes(verseNumberString) ) {
+									selectedVerses = selectedVerses.filter(e => e !== verseNumberString);
+									selectedVerses.push("x");
+								} else {
+									selectedVerses.push(verseNumberString);
+								}
+								selectedVerses.sort();
+								selectedVerses = selectedVerses.filter(e => e !== -1);
+								selectedVerses = selectedVerses.filter(e => e !== "-1");
+								if (selectedVerses.length < 1) {
+									selectedVerses.push("x");
+								}
+								database.ref("users/" + uid).update( {
+									selectedVerses: selectedVerses
+								});
+								locate(currentBook - 1, currentChapter - 1, currentVerse - 1, false);
+							}
+						});
+					}
+					setTopLabel(true);
+					setBottomLabel(true);
+					if (lastVerseDiv != null) {
+						lastVerseDiv.style.marginBottom = ( (getElementContentHeight(bottomLabel) * 1.5) + "px");
+					}
+				});
+			}
+			function goTo(book, chapter, verse, store) {
+				currentBook = parseInt(book);
+				currentChapter = parseInt(chapter);
+				currentVerse = parseInt(verse);
+				locate(currentBook - 1, currentChapter - 1, currentVerse - 1, store);
+			}
+			function storeLocation() {
+				database.ref("users/" + uid).update( {
+					currentBook: currentBook,
+					currentChapter: currentChapter,
+					currentVerse: currentVerse
+				});
+				database.ref("/users/" + uid + "/history").once("value").then(function(snapshot) {
+					scriptureHistory = snapshot.val();
+					var values = [];
+					for (var key in scriptureHistory) {
+						const val = scriptureHistory[key];
+						values.push(val);
+					}
+					scriptureHistory = values;
+					if (scriptureHistory[scriptureHistory.length - 1] != ( currentBook + "." + currentChapter + "." + currentVerse ) ) {
+						const timestamp = parseInt(Date.now() * .001);
+						database.ref("users/" + uid + "/history").update( {[timestamp] : (currentBook + "." + currentChapter + "." + currentVerse) });
+					}
+				});
+			}
+
+			//MARK: Bible - Highlights
+
+			function storeHighlights() {
+				highlights = highlights.sort()
+				const highlightsFiltered = highlights.filter(function(item, pos, arr) {
+					return pos === 0 || item !== arr[pos - 1];
+				});
+				highlights = highlightsFiltered;
+				var versesArrayAsString = "";
+				for (var i = 0; i < highlights.length; i++) {
+					versesArrayAsString = versesArrayAsString + highlights[i] + ","
+				}
+				versesArrayAsString = versesArrayAsString.substring(0, versesArrayAsString.length - 1);
+				var updates = {};
+				updates[currentChapter] = versesArrayAsString;
+				updates["\"\""] = "";
+				database.ref("users/" + uid + "/highlights/" + currentBook).update(updates);
+				database.ref("users/" + uid + "/highlights/" + 66).update( {"\"\"":""});
+			}
+			function eraseHighlight(highlightNumber) {
+				highlights = highlights.filter(e => e != highlightNumber);
+				storeHighlights();
+			}
+
+			//MARK: Bible - Setters
+
+			function setStyle() {
+				if (night) {
+					profileNightMode.innerHTML = "night";
+					document.body.classList.add("night");
+					document.body.classList.remove("day");
+				} else {
+					profileNightMode.innerHTML = "day";
+					document.body.classList.add("day");
+					document.body.classList.remove("night");
+				}
+				document.body.classList.remove("eighteen");
+				document.body.classList.remove("twenty");
+				document.body.classList.remove("twentyTwo");
+				document.body.classList.remove("twentyFour");
+				document.body.classList.remove("twentySix");
+				document.body.classList.remove("twentyEight");
+				document.body.classList.remove("thirty");
+				document.body.classList.remove("thirtyTwo");
+				var currentFontSizeClassName;
+				switch (currentFontSize) {
+					case 18:
+						currentFontSizeClassName = "eighteen";
+						break;
+					case 20:
+						currentFontSizeClassName = "twenty";
+						break;
+					case 22:
+						currentFontSizeClassName = "twentyTwo";
+						break;
+					case 24:
+						currentFontSizeClassName = "twentyFour";
+						break;
+					case 26:
+						currentFontSizeClassName = "twentySix";
+						break;
+					case 28:
+						currentFontSizeClassName = "twentyEight";
+						break;
+					case 30:
+						currentFontSizeClassName = "thirty";
+						break;
+					case 32:
+						currentFontSizeClassName = "thirtyTwo";
+				}
+				document.body.classList.add(currentFontSizeClassName);
+				document.body.classList.remove("Iceland");
+				document.body.classList.remove("Lora-Regular");
+				document.body.classList.remove("Oswald-Regular");
+				document.body.classList.remove("PlayfairDisplay-Regular");
+				document.body.classList.remove("Poppins-Regular");
+				document.body.classList.remove("Raleway-Regular");
+				document.body.classList.remove("Roboto-Regular");
+				document.body.classList.remove("Satisfy-Regular");
+				document.body.classList.remove("SourceCodePro-Regular");
+				document.body.classList.remove("Ubuntu-Regular");
+				document.body.classList.add(currentFontFamily);
+			}
+			function setCurrentPage() {
+				const profile = document.getElementById("profile");
+				const bible = document.getElementById("bible");
+				if (currentPage == "profile") {
+					profile.classList.add("show");
+					profile.classList.remove("hide");
+					bible.classList.add("hide");
+					bible.classList.remove("show");
+					previous.style.cursor = "default";
+					next.style.cursor = "default";
+				} else if (currentPage == "bible") {
+					profile.classList.add("hide");
+					profile.classList.remove("show");
+					bible.classList.add("show");
+					bible.classList.remove("hide");
+					previous.style.cursor = "w-resize";
+					next.style.cursor = "e-resize";
+				}
+			}
+			function setContentMode(navigationMode) {
+				contentMode = navigationMode;
+				setTopLabel(false);
+				setBottomLabel(false);
+			}
+
+			//MARK: Bible - Getters
+
+			function getElementContentHeight(element) {
+				const styles = window.getComputedStyle(element);
+				const padding = parseFloat(styles.paddingTop) + parseFloat(styles.paddingBottom);
+				return element.clientHeight + padding + 1;
+			}
+			function getRandomNumber(min, max) {
+				return Math.random() * (max - min) + min;
+			}
+
+			//MARK: Bible - Helpers
+
+			function selectedReferences() {
+				var workingArray = [];
+				var verseElements = document.getElementsByClassName("verse");
+				for (var i = 0; i < verseElements.length; i++) {
+					if (!verseElements[i].classList.contains("selected") ) {
+						workingArray[i] = ", ";
+					} else {
+						const className = verseElements[i].id + "";
+						const array = className.match("([0-9]*)");
+						verseNumber = array[0];
+						verseNumberString = (verseNumber)+"";
+						workingArray[i] = verseNumberString;
+					}
+				}
+				var verseRange = [];
+				var range = [];
+				for (var i = 0; i < workingArray.length; i++) {
+					if (workingArray[i] != ", ") {
+						range.push(workingArray[i]);
+					} else {
+						if (range.length != 0) {
+							verseRange.push(range);
+							range = [];
+						}
+					}
+				}
+				if (range.length != 0) {
+					verseRange.push(range);
+					range = [];
+				}
+				var verseRangesString = "";
+				for (var i = 0; i < verseRange.length; i++) {
+					if (verseRange[i].length > 1) {
+						verseRangesString += verseRange[i][0] + "-" + verseRange[i][verseRange[i].length - 1];
+					} else {
+						verseRangesString += verseRange[i][0];
+					}
+				verseRangesString +=", ";
+				}
+				verseRangesString = verseRangesString.slice(0, -2);
+				if (selectedVerses[0] == "x") {
+					versesAreSelected = false;
+					return booksOfBible[currentBook - 1];
+				} else {
+					versesAreSelected = true;
+					return booksOfBible[currentBook - 1] + " " + currentChapter + ":" + verseRangesString;
+				}
+			}
+			function copy(text) {
+				if (!navigator.clipboard) {
+					const textArea = document.createElement("textarea");
+					textArea.value = text;
+					textArea.style.position="fixed";
+					document.body.appendChild(textArea);
+					textArea.focus();
+					textArea.select();
+					try {
+						var successful = document.execCommand("copy");
+						var msg = successful ? "successful" : "unsuccessful";
+					} catch (err) {}
+					document.body.removeChild(textArea);
+					return;
+				}
+				navigator.clipboard.writeText(text).then(function() {}, function(err) {});
+			}
+			function pad(num, size) {
+				const s = "000000000" + num;
+				return s.substr(s.length - size);
+			}
+
+		</script>
+	</body>
+</html>
